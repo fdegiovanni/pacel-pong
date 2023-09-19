@@ -44,13 +44,14 @@ export default class Pong extends Phaser.Scene {
     this.physics.add.collider(this.racket, this.ball, this.hit, null, this);
 
     // colision con los obstaculos
+    const scene = this;
     this.obstacles.forEach((obstacle) => {
       const o = this.add.rectangle(
         obstacle.x,
         obstacle.y,
         obstacle.w,
         obstacle.h,
-        0xffffff
+        scene.getRandomColor()
       );
       this.physics.add.existing(o);
       o.body.setImmovable(true);
@@ -103,17 +104,28 @@ export default class Pong extends Phaser.Scene {
       console.log("candidate newObstacle", newObstacle);
 
       // check if the new obstacle is not in the same place as the others and is not overlapping with others
-      overlapping = this.obstacles.some((obstacle) => (
+      overlapping = this.obstacles.some(
+        (obstacle) =>
           newObstacle.x < obstacle.x + obstacle.w &&
           newObstacle.x + newObstacle.w > obstacle.x &&
           newObstacle.y < obstacle.y + obstacle.h &&
           newObstacle.y + newObstacle.h > obstacle.y
-        ));
+      );
       if (!overlapping) obstacleToAdd = newObstacle;
     }
 
     console.log("obstacleToAdd", obstacleToAdd);
     this.obstacles.push(obstacleToAdd);
     console.table(this.obstacles);
+  }
+
+  getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "0x";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+      console.log(color);
+    }
+    return color;
   }
 }
